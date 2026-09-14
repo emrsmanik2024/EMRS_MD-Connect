@@ -65,9 +65,7 @@ initializeAdmin();
 
 // --- Nodemailer Setup ---
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    service: 'gmail',
     auth: {
         user: 'emrs.manik2024@gmail.com',
         pass: process.env.EMAIL_PASS
