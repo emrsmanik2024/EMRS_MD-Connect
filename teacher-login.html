@@ -49,7 +49,7 @@
         msgEl.innerText = 'Verifying credentials...';
 
         try {
-            const res = await fetch('http://localhost:4000/api/teacher-login', {
+            const res = await fetch('/api/teacher-login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
