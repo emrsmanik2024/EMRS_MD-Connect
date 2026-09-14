@@ -68,7 +68,7 @@ const transporter = nodemailer.createTransport({
     host: 'smtp-relay.brevo.com',
     port: 587,
     auth: {
-        user: 'b95622001@smtp-brevo.com', // Brevo থেকে পাওয়া Login আইডি
+        user: 'emrs.manik2024@gmail.com', // Brevo থেকে পাওয়া Login আইডি
         pass: process.env.EMAIL_PASS       // Render-এ দেওয়া Brevo-এর লম্বা SMTP Key (xsmtpsib-...)
     }
 });
