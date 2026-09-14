@@ -64,11 +64,13 @@ const initializeAdmin = async () => {
 initializeAdmin();
 
 // --- Nodemailer Setup ---
+// --- Nodemailer Setup (Brevo SMTP) ---
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp-relay.brevo.com',
+    port: 587,
     auth: {
-        user: 'emrs.manik2024@gmail.com',
-        pass: process.env.EMAIL_PASS
+        user: process.env.EMAIL_USER, // তোর Brevo জিমেইল আইডি
+        pass: process.env.EMAIL_PASS  // তোর Brevo-এর নতুন SMTP Key
     }
 });
 
