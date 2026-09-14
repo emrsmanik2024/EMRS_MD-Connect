@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Login - StudentHub</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #e0f7fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-top: 5px solid #00acc1; }
+        h2 { text-align: center; color: #00838f; margin-bottom: 5px; }
+        p { text-align: center; color: #555; font-size: 14px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; font-size: 14px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        button { width: 100%; padding: 12px; background: #00acc1; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background: #00838f; }
+        #message { text-align: center; margin-top: 15px; font-size: 14px; font-weight: bold; }
+        .links { text-align: center; margin-top: 15px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Teacher Portal</h2>
+    <p>Sign in to manage classes and students</p>
+    
+    <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="t-email" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="t-password" placeholder="Enter password">
+    </div>
+    <button onclick="handleTeacherLogin()">Secure Login</button>
+    <div id="message"></div>
+    <div class="links">
+        <a href="login.html" style="color: #00838f;">Go to Admin Login</a>
+    </div>
+</div>
+
+<script>
+    async function handleTeacherLogin() {
+        const email = document.getElementById('t-email').value;
+        const password = document.getElementById('t-password').value;
+        const msgEl = document.getElementById('message');
+
+        msgEl.style.color = 'blue';
+        msgEl.innerText = 'Verifying credentials...';
+
+        try {
+            const res = await fetch('http://localhost:4000/api/teacher-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                msgEl.style.color = 'green';
+                msgEl.innerText = "Login Successful! Redirecting...";
+                // টিচারের নাম ও টোকেন সেভ করা হচ্ছে
+                localStorage.setItem('teacher_auth', data.token);
+                localStorage.setItem('teacher_name', data.name);
+                localStorage.setItem('teacher_subject', data.subject);
+                
+                setTimeout(() => { window.location.href = 'teacher-dashboard.html'; }, 1000);
+            } else {
+                msgEl.style.color = 'red';
+                msgEl.innerText = data.message;
+            }
+        } catch (error) {
+            msgEl.style.color = 'red';
+            msgEl.innerText = "Server error. Ensure Node server is running.";
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMRS MD-Connect | Attendance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #F3F4F6; }
+        .dashboard-wrapper { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: #111827; color: white; padding: 20px 0; }
+        .sidebar-header { padding: 0 20px 20px 20px; border-bottom: 1px solid #374151; margin-bottom: 20px; }
+        .sidebar-header h2 { font-size: 20px; color: #10B981; }
+        .nav-links { list-style: none; }
+        .nav-links li a { display: block; padding: 12px 20px; color: #D1D5DB; text-decoration: none; transition: 0.3s; }
+        .nav-links li a:hover, .nav-links li a.active { background: #1F2937; color: white; border-left: 4px solid #10B981; }
+        .main-content { flex: 1; padding: 30px; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .data-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; }
+        .btn-primary { background: #3B82F6; }
+        .btn-success { background: #10B981; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #E5E7EB; padding: 12px; text-align: left; }
+        th { background: #F9FAFB; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>EMRS MD-Connect</h2>
+                <p style="font-size: 12px; color: #9CA3AF; margin-top: 5px;">Teacher Portal</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="teacher-dashboard.html">Dashboard</a></li>
+                <li><a href="attendance.html" class="active">Attendance</a></li>
+                <li><a href="marks.html">Marks Entry</a></li>
+                <li><a href="login.html" onclick="localStorage.clear()" style="margin-top: 20px; color: #EF4444;">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Attendance Management</h2>
+            </header>
+
+            <div class="data-container">
+                <div class="form-grid" style="align-items: end;">
+                    <div class="form-group">
+                        <label>Select Date</label>
+                        <input type="date" id="attDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <select id="attClass">
+                            <option value="">Choose Class...</option>
+                            <option value="Class VI">Class VI</option>
+                            <option value="Class VII">Class VII</option>
+                            <option value="Class VIII">Class VIII</option>
+                            <option value="Class IX">Class IX</option>
+                            <option value="Class X">Class X</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" style="width: 100%;" onclick="loadAttendance()">Load Students</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="attendanceArea" class="data-container" style="display: none;">
+                <h3>Mark Attendance</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceTableBody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function loadAttendance() {
+            const cls = document.getElementById('attClass').value;
+            const date = document.getElementById('attDate').value;
+            if(!cls || !date) {
+                alert("Please select both Date and Class!");
+                return;
+            }
+            // Placeholder logic for viewing area
+            document.getElementById('attendanceArea').style.display = 'block';
+            document.getElementById('attendanceTableBody').innerHTML = `<tr><td colspan="3" style="text-align:center;">Feature ready for backend hookup</td></tr>`;
+        }
+    </script>
+</body>
+</html>

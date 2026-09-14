@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMRS MD-Connect | Teacher Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #F3F4F6; }
+        .dashboard-wrapper { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: #111827; color: white; padding: 20px 0; }
+        .sidebar-header { padding: 0 20px 20px 20px; border-bottom: 1px solid #374151; margin-bottom: 20px; }
+        .sidebar-header h2 { font-size: 20px; color: #10B981; }
+        .nav-links { list-style: none; }
+        .nav-links li a { display: block; padding: 12px 20px; color: #D1D5DB; text-decoration: none; transition: 0.3s; }
+        .nav-links li a:hover, .nav-links li a.active { background: #1F2937; color: white; border-left: 4px solid #10B981; }
+        .main-content { flex: 1; padding: 30px; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .data-container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; color: white; transition: 0.3s; }
+        .btn-success { background: #10B981; }
+        .btn-primary { background: #3B82F6; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #D1D5DB; border-radius: 6px; }
+        #alertMsg { display: none; padding: 12px; border-radius: 6px; margin-top: 15px; font-size: 14px; font-weight: 500; }
+        .alert-success { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+        .alert-error { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>EMRS MD-Connect</h2>
+                <p style="font-size: 12px; color: #9CA3AF; margin-top: 5px;">Teacher Portal</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="teacher-dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+                <li><a href="marks.html">Marks Entry</a></li>
+                <li><a href="login.html" onclick="localStorage.clear()" style="margin-top: 20px; color: #EF4444;">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Welcome, Teacher</h2>
+                <div class="user-profile">Role: Teacher</div>
+            </header>
+
+            <div id="alertMsg"></div>
+
+            <!-- Single Entry Form -->
+            <div class="data-container">
+                <h3 style="margin-bottom: 15px; color: #1F2937;">Add Single Student</h3>
+                <form id="singleEntryForm" onsubmit="addSingleStudent(event)">
+                    <div class="form-grid">
+                        <div class="form-group"><input type="text" id="sName" placeholder="Student Name" required></div>
+                        <div class="form-group"><input type="text" id="sRoll" placeholder="Roll Number" required></div>
+                        <div class="form-group">
+                            <select id="sClass" required>
+                                <option value="">Select Class</option>
+                                <option value="Class VI">Class VI</option>
+                                <option value="Class VII">Class VII</option>
+                                <option value="Class VIII">Class VIII</option>
+                                <option value="Class IX">Class IX</option>
+                                <option value="Class X">Class X</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><input type="text" id="sSection" placeholder="Section"></div>
+                        <div class="form-group"><input type="text" id="sMobile" placeholder="Mobile Number"></div>
+                        <div class="form-group"><input type="text" id="sFather" placeholder="Father's Name"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">➕ Add Student</button>
+                </form>
+            </div>
+
+            <!-- Excel Import -->
+            <div class="data-container">
+                <h3 style="margin-bottom: 15px; color: #1F2937;">Import Student Data (Excel/CSV)</h3>
+                <p style="font-size: 14px; color: #6B7280; margin-bottom: 20px;">Columns needed: Name, Roll, Class, Section, Mobile, FatherName.</p>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" style="display: none;" onchange="processExcelFile(event)">
+                    <button class="btn btn-success" onclick="document.getElementById('excelFile').click()">📥 Upload Excel</button>
+                    <span id="fileNameDisplay" style="font-size: 14px; color: #4B5563;">No file chosen</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showAlert(msg, type) {
+            const alertBox = document.getElementById('alertMsg');
+            alertBox.innerText = msg;
+            alertBox.className = type === 'success' ? 'alert-success' : 'alert-error';
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
+        }
+
+        async function addSingleStudent(e) {
+            e.preventDefault();
+            const data = {
+                name: document.getElementById('sName').value,
+                roll: document.getElementById('sRoll').value,
+                class: document.getElementById('sClass').value,
+                section: document.getElementById('sSection').value,
+                mobile: document.getElementById('sMobile').value,
+                fatherName: document.getElementById('sFather').value
+            };
+
+            try {
+                const res = await fetch('/api/students/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                showAlert(result.message, result.success ? "success" : "error");
+                if (result.success) document.getElementById('singleEntryForm').reset();
+            } catch (err) {
+                showAlert("Server error", "error");
+            }
+        }
+
+        function processExcelFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            document.getElementById('fileNameDisplay').innerText = file.name;
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                try {
+                    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                    const json_data = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+                    
+                    let studentsToUpload = [];
+                    json_data.forEach(row => {
+                        const getVal = (str) => {
+                            const key = Object.keys(row).find(k => k.toLowerCase().includes(str));
+                            return key ? String(row[key]).trim() : "";
+                        };
+                        let cls = getVal("class");
+                        if (cls) cls = "Class " + cls.toUpperCase().replace("CLASS", "").trim();
+                        
+                        if (getVal("name") && getVal("roll") && cls) {
+                            studentsToUpload.push({
+                                name: getVal("name"), roll: getVal("roll"), class: cls,
+                                section: getVal("section"), mobile: getVal("mobile"), fatherName: getVal("father")
+                            });
+                        }
+                    });
+
+                    const res = await fetch('/api/students/import', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(studentsToUpload)
+                    });
+                    const result = await res.json();
+                    showAlert(result.message, result.success ? "success" : "error");
+                    event.target.value = "";
+                } catch (err) {
+                    showAlert("Error parsing file.", "error");
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    </script>
+</body>
+</html>

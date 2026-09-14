@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMRS MD-Connect | Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #F3F4F6; color: #111827; }
+        
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: #111827; padding: 15px 30px; color: white; position: sticky; top: 0; z-index: 100; }
+        .navbar h1 { font-size: 24px; color: #10B981; }
+        .login-btn { background: #3B82F6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; transition: 0.3s; }
+        .login-btn:hover { background: #2563EB; }
+
+        /* Hero Section (Main School Image) */
+        .hero { width: 100%; height: 400px; background: url('images/school.jpg') center/cover no-repeat; display: flex; align-items: center; justify-content: center; position: relative; }
+        .hero-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); }
+        .hero-content { position: relative; z-index: 1; text-align: center; color: white; }
+        .hero-content h2 { font-size: 40px; margin-bottom: 10px; }
+        .hero-content p { font-size: 18px; }
+
+        /* Scrolling Gallery */
+        .gallery-section { padding: 30px; background: white; text-align: center; overflow: hidden; }
+        .gallery-section h3 { margin-bottom: 20px; font-size: 24px; color: #1F2937; }
+        .gallery-container { display: flex; gap: 15px; width: max-content; animation: scrollGallery 20s linear infinite; }
+        .gallery-container:hover { animation-play-state: paused; }
+        .gallery-container img { width: 300px; height: 200px; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        @keyframes scrollGallery {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Notice Board Section */
+        .notice-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 40px 30px; max-width: 1200px; margin: 0 auto; }
+        .notice-box { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 400px; overflow-y: auto; }
+        .notice-box h3 { font-size: 20px; margin-bottom: 15px; color: #DC2626; border-bottom: 2px solid #E5E7EB; padding-bottom: 10px; }
+        .archive-box h3 { color: #4B5563; }
+        .notice-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #F3F4F6; }
+        .notice-date { font-size: 12px; font-weight: bold; color: #3B82F6; margin-bottom: 5px; display: block; }
+        .notice-title { font-size: 16px; font-weight: 600; color: #1F2937; text-decoration: none; }
+        .notice-title:hover { color: #10B981; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <h1>EMRS MD-Connect</h1>
+        <a href="login.html" class="login-btn">Login Portal</a>
+    </nav>
+
+    <!-- Main School Photo -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h2>Welcome to EMRS MD-Connect</h2>
+            <p>Empowering Education, Shaping the Future</p>
+        </div>
+    </section>
+
+    <!-- Scrolling Photo Gallery -->
+    <section class="gallery-section">
+        <h3>Campus Gallery</h3>
+        <!-- Updated to use local images from 'images' folder -->
+        <div class="gallery-container">
+            <img src="images/pic1.jpg" alt="Gallery Photo 1">
+            <img src="images/school.jpg" alt="Gallery Photo 2">
+            <!-- Duplicated for smooth infinite scroll effect -->
+            <img src="images/pic1.jpg" alt="Gallery Photo 1">
+            <img src="images/school.jpg" alt="Gallery Photo 2">
+        </div>
+    </section>
+
+    <!-- Notice Boards -->
+    <section class="notice-container">
+        <!-- Latest Notices -->
+        <div class="notice-box">
+            <h3>📌 Latest Updates</h3>
+            <div class="notice-item">
+                <span class="notice-date">Sep 15, 2026</span>
+                <a href="#" class="notice-title">Admit Cards for Half-Yearly Exams Available</a>
+            </div>
+            <div class="notice-item">
+                <span class="notice-date">Sep 12, 2026</span>
+                <a href="#" class="notice-title">School closed on account of upcoming festival</a>
+            </div>
+            <div class="notice-item">
+                <span class="notice-date">Sep 05, 2026</span>
+                <a href="#" class="notice-title">Teachers' Day Celebration Program Schedule</a>
+            </div>
+        </div>
+
+        <!-- Notification Archive -->
+        <div class="notice-box archive-box">
+            <h3>🗄️ Notice Archive</h3>
+            <div class="notice-item">
+                <span class="notice-date">Aug 20, 2026</span>
+                <a href="#" class="notice-title">Independence Day Celebration Photos Added</a>
+            </div>
+            <div class="notice-item">
+                <span class="notice-date">Jul 10, 2026</span>
+                <a href="#" class="notice-title">Revised Syllabus for Class X & XII</a>
+            </div>
+            <div class="notice-item">
+                <span class="notice-date">Jun 01, 2026</span>
+                <a href="#" class="notice-title">Summer Vacation Homework Submission Guidelines</a>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

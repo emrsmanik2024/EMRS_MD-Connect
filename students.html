@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentHub - Manage Students</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header"><h2>StudentHub</h2></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="students.html" class="active">Students</a></li>
+                <li><a href="attendance.html">Attendance</a></li>
+                <li><a href="marks.html">Marks Entry</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="login.html" style="margin-top: 20px; color: #DC2626;">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h2>Student Management</h2>
+            </header>
+
+            <div class="actions" style="display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="showStudentForm()">+ Add Student</button>
+                <button class="btn btn-primary" onclick="showStudentList()" style="background: #6B7280;">View Students</button>
+                
+                <div style="flex: 1; margin-left: 20px;">
+                    <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+                        <b>Excel Format:</b> Heading must be <i>Name, Roll, Class</i> (You can just write VI, VII etc).<br>
+                        Optional Headings: <i>Section, Father, Mobile</i>.
+                    </p>
+                </div>
+                
+                <input type="file" id="excelFile" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleExcelUpload(event)">
+                <button class="btn btn-success" onclick="document.getElementById('excelFile').click()" style="background: #10B981; padding: 12px 20px;">📥 Import Excel</button>
+            </div>
+
+            <!-- Add/Edit Student Form -->
+            <div id="studentForm" class="form-container">
+                <h3 id="formTitle" style="margin-bottom: 20px;">Add New Student</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Student Name</label>
+                        <input type="text" id="studentName" placeholder="Enter student name">
+                    </div>
+                    <div class="form-group">
+                        <label>Roll Number</label>
+                        <input type="text" id="rollNumber" placeholder="Enter roll number">
+                    </div>
+                    <div class="form-group">
+                        <label>Class</label>
+                        <select id="studentClass">
+                            <option value="">Select Class</option>
+                            <option>Class VI</option>
+                            <option>Class VII</option>
+                            <option>Class VIII</option>
+                            <option>Class IX</option>
+                            <option>Class X</option>
+                            <option>Class XI</option>
+                            <option>Class XII</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Section</label>
+                        <input type="text" id="section" placeholder="Enter section">
+                    </div>
+                    <div class="form-group">
+                        <label>Father's Name</label>
+                        <input type="text" id="fatherName" placeholder="Enter father's name">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="mobile" placeholder="Enter mobile number">
+                    </div>
+                </div>
+                <button id="saveBtn" class="btn btn-success" onclick="saveStudent()">Save Student</button>
+                <button class="btn btn-danger" style="padding: 10px 18px; font-size: 14px;" onclick="hideStudentForm()">Cancel</button>
+            </div>
+
+            <!-- Student List with Filter -->
+            <div id="studentList" class="data-container">
+                <h3 style="margin-bottom: 20px;">Student List</h3>
+                
+                <!-- Search & Filter Area -->
+                <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <input type="text" id="searchStudent" class="search-box" style="margin-bottom: 0; flex: 1; min-width: 200px;" placeholder="Search by name or roll..." onkeyup="filterStudents()">
+                    
+                    <select id="filterClass" class="search-box" style="margin-bottom: 0; width: auto; min-width: 150px; cursor: pointer;" onchange="filterStudents()">
+                        <option value="All">All Classes</option>
+                        <!-- Options will load dynamically -->
+                    </select>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table style="min-width: 800px;">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Roll</th>
+                                <th>Class</th>
+                                <th>Section</th>
+                                <th>Mobile</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTable">
+                            <!-- Data will load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/students.js"></script>
+</body>
+</html>
